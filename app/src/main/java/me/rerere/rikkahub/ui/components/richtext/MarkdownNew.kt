@@ -439,11 +439,6 @@ private fun HtmlListItem(
     val checkboxInput = item.selectFirst("input[type=checkbox]")
     val isChecked = checkboxInput?.hasAttr("checked") == true
 
-    val isRtl = isRtlText(item.text())
-    val layoutDir = if (isRtl) androidx.compose.ui.unit.LayoutDirection.Rtl else androidx.compose.ui.unit.LayoutDirection.Ltr
-    androidx.compose.runtime.CompositionLocalProvider(
-        androidx.compose.ui.platform.LocalLayoutDirection provides layoutDir
-    ) {
     HtmlStyledElement(element = item) {
         Column {
             Row(
