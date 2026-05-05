@@ -367,6 +367,10 @@ private fun HtmlParagraphContent(
         overflow = TextOverflow.Visible,
         modifier = Modifier.fillMaxWidth(),
         style = textStyle.copy(
+            textDirection = if (isRtlText(annotatedString.text))
+                androidx.compose.ui.text.style.TextDirection.Rtl
+            else
+                androidx.compose.ui.text.style.TextDirection.ContentOrLtr,
             lineHeight = if (hasInlineMath && enableLatexRendering)
                 TextUnit.Unspecified
             else
@@ -435,6 +439,11 @@ private fun HtmlListItem(
     val checkboxInput = item.selectFirst("input[type=checkbox]")
     val isChecked = checkboxInput?.hasAttr("checked") == true
 
+    val isRtl = isRtlText(item.text())
+    val layoutDir = if (isRtl) androidx.compose.ui.unit.LayoutDirection.Rtl else androidx.compose.ui.unit.LayoutDirection.Ltr
+    androidx.compose.runtime.CompositionLocalProvider(
+        androidx.compose.ui.platform.LocalLayoutDirection provides layoutDir
+    ) {
     HtmlStyledElement(element = item) {
         Column {
             Row(

@@ -86,6 +86,20 @@ import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMTokenTypes
 import org.intellij.markdown.parser.MarkdownParser
 
+
+
+internal fun isRtlText(text: String): Boolean {
+    val rtlChars = text.count { c ->
+        Character.getDirectionality(c) in listOf(
+            Character.DIRECTIONALITY_RIGHT_TO_LEFT,
+            Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC
+        )
+    }
+    val ltrChars = text.count { c ->
+        Character.getDirectionality(c) == Character.DIRECTIONALITY_LEFT_TO_RIGHT
+    }
+    return rtlChars > ltrChars
+}
 private val flavour by lazy {
     GFMFlavourDescriptor(
         makeHttpsAutoLinks = true, useSafeLinks = true
@@ -772,6 +786,10 @@ private fun Paragraph(
             softWrap = true,
             overflow = TextOverflow.Visible,
             style = LocalTextStyle.current.copy(
+                textDirection = if (isRtlText(annotatedString.text))
+                    androidx.compose.ui.text.style.TextDirection.Rtl
+                else
+                    androidx.compose.ui.text.style.TextDirection.ContentOrLtr,
                 lineHeight = if (hasInlineMath && enableLatexRendering) TextUnit.Unspecified else LocalTextStyle.current.lineHeight
             )
         )
