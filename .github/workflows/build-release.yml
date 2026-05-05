@@ -58,6 +58,23 @@ jobs:
           }
           GSJSON
 
+
+      - name: Generate keystore for release signing
+        run: |
+          keytool -genkeypair -v \
+            -keystore release.keystore \
+            -alias release \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass android \
+            -keypass android \
+            -dname "CN=RTL Build, OU=Build, O=Build, L=Build, S=Build, C=US"
+          echo "storeFile=../release.keystore" >> local.properties
+          echo "storePassword=android" >> local.properties
+          echo "keyAlias=release" >> local.properties
+          echo "keyPassword=android" >> local.properties
+
       - name: Grant execute permission
         run: chmod +x gradlew
 
