@@ -75,6 +75,13 @@ function getNodeText(node: React.ReactNode): string {
   return "";
 }
 
+
+function isRtlText(text: string): boolean {
+  const rtlChars = (text.match(/[֑-߿יִ-﷽ﹰ-ﻼ]/g) || []).length;
+  const ltrChars = (text.match(/[A-Za-zÀ-ÖØ-ö]/g) || []).length;
+  return rtlChars > ltrChars;
+}
+
 export default function Markdown({
   content,
   className,
@@ -108,7 +115,7 @@ export default function Markdown({
   );
 
   return (
-    <div className={cn("markdown", className)}>
+    <div className={cn("markdown", className)} dir={isRtlText(content) ? "rtl" : "ltr"}>
       <Streamdown
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={[rehypeKatex, rehypeRaw]}
