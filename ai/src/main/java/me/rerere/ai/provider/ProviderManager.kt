@@ -55,6 +55,7 @@ class ProviderManager(client: OkHttpClient, context: Context) {
             is ProviderSetting.Google -> getProvider("google")
             is ProviderSetting.Claude -> getProvider("claude")
             is ProviderSetting.AICore -> getProvider("aicore")
+            is ProviderSetting.LiteRtLocal -> getProvider("local_litert")
         } as Provider<T>
     }
 }

@@ -21,8 +21,8 @@ android {
         applicationId = "me.rerere.rikkahub"
         minSdk = 26
         targetSdk = 37
-        versionCode = 159
-        versionName = "2.1.16"
+        versionCode = 160
+        versionName = "2.1.17"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -114,6 +114,18 @@ android {
         jniLibs {
             useLegacyPackaging = true
         }
+    }
+    lint {
+        // FullBackupContent insists every <exclude> path lives under a previously
+        // <include>'d root. Our backup_rules.xml + data_extraction_rules.xml use
+        // include="upload/" + explicit excludes for databases / sharedpref /
+        // datastore/ / known_hosts / browser-profile/ / local-models/ as
+        // belt-and-suspenders defence: if anyone later adds a broader <include>
+        // (e.g. domain="root"), the excludes still keep credentials and
+        // multi-GB local LLM weights off the cloud-backup path. Lint reads that
+        // pattern as redundant; the runtime accepts it. Keep the rules; mute
+        // the check.
+        disable.add("FullBackupContent")
     }
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions.optIn.add("androidx.compose.material3.ExperimentalMaterial3Api")
@@ -293,6 +305,7 @@ dependencies {
 
     // modules
     implementation(project(":ai"))
+    implementation(project(":local-llm"))
     implementation(project(":web"))
     implementation(project(":document"))
     implementation(project(":highlight"))
