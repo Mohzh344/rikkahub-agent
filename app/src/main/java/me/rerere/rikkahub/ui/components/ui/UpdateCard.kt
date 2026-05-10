@@ -52,6 +52,7 @@ import kotlin.time.toJavaInstant
 @OptIn(ExperimentalTime::class)
 @Composable
 fun UpdateCard(vm: ChatVM) {
+    return
     val state by vm.updateState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val toaster = LocalToaster.current
